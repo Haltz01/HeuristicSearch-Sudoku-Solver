@@ -19,7 +19,7 @@ class SudokuSolver {
         std::vector<std::vector<int>> board; // sudoku board -> empty cells are marked as 0
         std::vector<std::vector<int>> nbOfValuesAvailableToCell; // contains the amount of values that can be inserted at each cell
         std::priority_queue<std::pair<int, std::pair<int, int>>> cellsToVisit; // priority_queue used to determine which will be the next visited cell, this cell will be assigned a value -> the "pair<pair>" is this (nbUsedValuesForCell, (cell_line, cell_column))
-
+        std::vector<std::vector<bool>> visited;
     public:
         SudokuSolver(std::vector<std::vector<int>> & sudokuBoard);
         SudokuSolver(std::vector<std::vector<int>> & sudokuBoard, int boardSize, int blockSize); // constructor
@@ -27,6 +27,13 @@ class SudokuSolver {
         void heuristicSearch();
         bool backtrackingSearch(std::vector<std::vector<bool>> & visited);
         void initialValuesLookup();
+        void solve();
+        void printBoard();
+        void copyBoard(std::vector<std::vector<int>> & boardToCopy);
+        void initialAdding();
+        bool valueCausesDuplicates(int curCellLine,int curCellCol,int valueToTry);
+        bool checkIfValueRepeats(int row, int col,int checkValue);
+        void copyPriorityQueue(std::priority_queue<std::pair<int, std::pair<int, int>>> & priorityQueueBackup);
 
 };
 
