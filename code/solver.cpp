@@ -15,24 +15,8 @@ SudokuSolver::SudokuSolver(std::vector<std::vector<int>> & sudokuBoard, int boar
     nbOfValuesAvailableToCell = std::vector<std::vector<int>>(boardSize, std::vector<int>(boardSize, 0));
 }
 
-/*
-void SudokuSolver::copyBoard(std::vector<std::vector<int>> & boardToCopy){
-    board = std::vector<std::vector<int>>(boardSize, std::vector<int>(boardSize, 0));
-    std::cout << "copyBoard" << std::endl;
-    std::cout << "board size = " << board.size() << std::endl;
-    for(int i = 0; i < boardSize; i++){
-        for(int j = 0; j < boardSize; j++){
-            std::cout << boardToCopy.at(i).at(j) << " ";
-            //board.at(i).at(j) = boardToCopy.at(i).at(j);
-        }
-        std::cout << std::endl;
-    }
-}
-*/
-//e
 void SudokuSolver::initialValuesLookup() {
     int blockIndex;
-    int lineBlock,colBlock;
 
     // iterate thought each cell to fill usedValuesRow, usedValuesColumn, usedValuesBlock
     for (int i = 0; i < boardSize; i++) { 
@@ -75,11 +59,7 @@ std::vector<int> SudokuSolver::getAvailableValuesForCell(int row, int col) {
         valueFreq[curValue] += ((int)std::pow(2,i) & usedValuesBlock[blockIndex]) ? 0 : 1;
         if(valueFreq[curValue] == 3) availableValues.push_back(curValue);
     }
-    std::cout << std::endl;
-    for(int val : availableValues){
-        std::cout << val << " ";
-    }
-    std::cout << std::endl;
+
     return availableValues;
 }
 
@@ -105,44 +85,37 @@ bool SudokuSolver::checkIfValueRepeats(int row, int col,int checkValue) {
     return false;
 }
 
+// bool SudokuSolver::valueCausesDuplicates(int curCellLine,int curCellCol,int valueToTry){
+//     int blockIndex = blockSize * floor((curCellLine/blockSize)) + floor((curCellCol/blockSize));
+//     int lineBlock,colBlock;
+//     std::vector<int> availableValues;
+//     for(int i =0;i<boardSize;i++){
+//         if (board[curCellLine][i] == 0 && checkIfValueRepeats(curCellLine,i,valueToTry)) { // LINE
+//             // std::cout << "error on (" << curCellLine << "," << i << ")\n";
+//             return true;
+//         }
 
+//         if (board[i][curCellCol] == 0 && checkIfValueRepeats(i,curCellCol,valueToTry)) { // COLUMN
+//             // std::cout << "error on (" << i << "," << curCellCol << ")\n";
+//             return true;
+//         }
 
-
-
-
-
-bool SudokuSolver::valueCausesDuplicates(int curCellLine,int curCellCol,int valueToTry){
-    int blockIndex = blockSize * floor((curCellLine/blockSize)) + floor((curCellCol/blockSize));
-    int lineBlock,colBlock;
-    std::vector<int> availableValues;
-    for(int i =0;i<boardSize;i++){
-        if (board[curCellLine][i] == 0 && checkIfValueRepeats(curCellLine,i,valueToTry)) { // LINE
-            std::cout << "error on (" << curCellLine << "," << i << ")\n";
-            return true;
-        }
-
-        if (board[i][curCellCol] == 0 && checkIfValueRepeats(i,curCellCol,valueToTry)) { // COLUMN
-            std::cout << "error on (" << i << "," << curCellCol << ")\n";
-            return true;
-        }
-
-        lineBlock = blockSize*(blockIndex/blockSize) + i/blockSize;
-        colBlock = blockSize*(blockIndex%blockSize) + i%blockSize;
-        if (board[lineBlock][colBlock] == 0 && checkIfValueRepeats(lineBlock,colBlock,valueToTry)) { // BLOCK
-            std::cout << "error on (" << lineBlock << "," << colBlock << ")\n";
-            return true;
-        }  
-    }
-    return false;
-}
-
+//         lineBlock = blockSize*(blockIndex/blockSize) + i/blockSize;
+//         colBlock = blockSize*(blockIndex%blockSize) + i%blockSize;
+//         if (board[lineBlock][colBlock] == 0 && checkIfValueRepeats(lineBlock,colBlock,valueToTry)) { // BLOCK
+//             // std::cout << "error on (" << lineBlock << "," << colBlock << ")\n";
+//             return true;
+//         }  
+//     }
+//     return false;
+// }
 
 bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) {
     bool isBoardCompleted = true;
     bool toBreak = false;
-    std::cout << "Entering backtracking" << std::endl;
+    // std::cout << "Entering backtracking" << std::endl;
 
-    printBoard();
+    // printBoard();
 
     //std::vector<std::vector<bool>> 
     //TODO: Backup of visited, check if returning does not break the program
@@ -159,30 +132,27 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
         }
     }
 
-    if (isBoardCompleted){
-        std::cout << "@Board is completed" << std::endl;
+    if (isBoardCompleted){ // no values are 0, so the board was 100% filled
+        // std::cout << "@Board is completed" << std::endl;
         return true;
-    } // values are 0, so the board was 100% filled
-
+    }
 
     if(cellsToVisit.empty()){
-        std::cout << "$No cells to visit" << std::endl;
+        // std::cout << "$No cells to visit" << std::endl;
         return false;
     }
-    std::cout << "Number of cells to visit = " << cellsToVisit.size() << std::endl;
+    // std::cout << "Number of cells to visit = " << cellsToVisit.size() << std::endl;
     
     // Visiting cell with max priority (has less options of values to be assigned)
     int curCellLine = cellsToVisit.top().second.first; // represents the cell row index
     int curCellCol = cellsToVisit.top().second.second;// represents the cell column index
-    int nbAvailableValues = boardSize - cellsToVisit.top().first; // number of used values, so the available values is boardSize - usedValues
+    // int nbAvailableValues = boardSize - cellsToVisit.top().first; // number of used values, so the available values is boardSize - usedValues
     cellsToVisit.pop();
-    std::cout << "\n===== VISITING NEXT  CELL =====\n";
-    std::cout << "line = " << curCellLine << " ";
-    std::cout << "; col = " << curCellCol << " ";
-    std::cout << "; N.A.V. = " << nbAvailableValues << std::endl;
+    // std::cout << "\n===== VISITING NEXT  CELL =====\n";
+    // printf("(%d, %d) with %d possible values\n", curCellLine, curCellCol, nbAvailableValues);
 
     if (visited[curCellLine][curCellCol]){
-        std::cout << "$ Cell already visited, returning...\n";
+        // std::cout << "$ Cell already visited, returning...\n";
         return false;
     }
     // mark current cell as visited
@@ -193,31 +163,29 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
 
     // get all possible values to assign to cell
     std::vector<int> availableValues = getAvailableValuesForCell(curCellLine, curCellCol);
-    std::cout << "Available values to insert in cell =\n";
-    for(int val : availableValues){
-        std::cout << "\t" << val << std::endl;
-    }
+    // std::cout << "Available values to insert in cell = ";
+    // for(int val : availableValues){
+    //     std::cout << val << ", ";
+    // }
     // propagate information of value assignment to all other empty cells in same row, column and block
     std::set<std::pair<int, int>> cellsToInsertInPq;
 
     int blockIndex = blockSize * floor((curCellLine/blockSize)) + floor((curCellCol/blockSize));
     int lineBlock,colBlock;
+    bool invalidValue = false;
     std::vector<std::vector<int>> nbOfValuesAvailableToCell_BACKUP;
 
     for (int valueToTry : availableValues) { // trying each value possible to current cell
-        std::cout << "Trying value " << valueToTry << " in cell " << curCellLine << ", " << curCellCol << std::endl;
+        // std::cout << "Trying value " << valueToTry << " in cell (" << curCellLine << ", " << curCellCol << ")\n";
         nbOfValuesAvailableToCell_BACKUP = nbOfValuesAvailableToCell;
 
         for (int i = 0; i < boardSize; i++) {
             if (curCellCol != i && board[curCellLine][i] == 0 && !checkIfValueRepeats(curCellLine,i,valueToTry)) { // LINE
                 if(nbOfValuesAvailableToCell[curCellLine][i] == 1){
-                    std::cout << "$ Cell [" << curCellLine << "][" << i << "] can't have a value assigned to -> Returning..." << std::endl;
+                    // std::cout << "$ Cell [" << curCellLine << "][" << i << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
-                    // resets priority_queue
-                    cellsToVisit = cellsToVisit_BACKUP;
-                    // backtracking after DFS
-                    visited[curCellLine][curCellCol] = false;
-                    return false;
+                    invalidValue = true;
+                    break;
                 }
                 nbOfValuesAvailableToCell[curCellLine][i]--;
                 if (!visited[curCellLine][i])
@@ -226,13 +194,10 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
 
             if (curCellLine != i && board[i][curCellCol] == 0 && !checkIfValueRepeats(i,curCellCol,valueToTry)) { // COLUMN
                 if(nbOfValuesAvailableToCell[i][curCellCol] == 1){
-                    std::cout << "$ Cell [" << i << "][" << curCellCol << "] can't have a value assigned to -> Returning..." << std::endl;
+                    // std::cout << "$ Cell [" << i << "][" << curCellCol << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
-                    // resets priority_queue
-                    cellsToVisit = cellsToVisit_BACKUP;
-                    // backtracking after DFS
-                    visited[curCellLine][curCellCol] = false;
-                    return false;
+                    invalidValue = true;
+                    break;
                 }
                 nbOfValuesAvailableToCell[i][curCellCol]--;
                 if (!visited[i][curCellCol])
@@ -245,13 +210,10 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
                 continue;
             if (board[lineBlock][colBlock] == 0 && !checkIfValueRepeats(lineBlock,colBlock,valueToTry)) { // BLOCK
                 if(nbOfValuesAvailableToCell[lineBlock][colBlock] == 1){
-                    std::cout << "$ Cell [" << lineBlock << "][" << colBlock << "] can't have a value assigned to -> Returning..." << std::endl;
+                    // std::cout << "$ Cell [" << lineBlock << "][" << colBlock << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
-                    // resets priority_queue
-                    cellsToVisit = cellsToVisit_BACKUP;
-                    // backtracking after DFS
-                    visited[curCellLine][curCellCol] = false;
-                    return false;
+                    invalidValue = true;
+                    break;
                 } 
                 nbOfValuesAvailableToCell[lineBlock][colBlock]--;
                 if (!visited[lineBlock][colBlock])
@@ -260,35 +222,48 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
 
         }
 
-        // add cells to priority queue with new priority values
-        for (std::pair<int, int> insertCell : cellsToInsertInPq) {
-            int row = insertCell.first;
-            int col = insertCell.second;
-            //if(nbOfValuesAvailableToCell[row][col] == 0) return false;
-            std::cout << "\t New cell in PQ: (" << row << ", " << col << ") N.A.V = " << nbOfValuesAvailableToCell[row][col] << "\n";
-            cellsToVisit.push({boardSize - nbOfValuesAvailableToCell[row][col], {row, col}});
+        if (!invalidValue) {
+            std::priority_queue<std::pair<int, std::pair<int, int>>> cellsToVisit_BACKUP2;
+            // add cells to priority queue with new priority values
+            for (std::pair<int, int> insertCell : cellsToInsertInPq) {
+                int row = insertCell.first;
+                int col = insertCell.second;
+                //if(nbOfValuesAvailableToCell[row][col] == 0) return false;
+                // std::cout << "\t New cell in PQ: (" << row << ", " << col << ") N.A.V = " << nbOfValuesAvailableToCell[row][col] << "\n";
+                cellsToVisit.push({boardSize - nbOfValuesAvailableToCell[row][col], {row, col}});
+            }
+
+            // decide the value to assign to current cell
+            board[curCellLine][curCellCol] = valueToTry;
+
+            // update values for usedValuesRow, usedValuesCol, usedValuesBlock
+            usedValuesRow[curCellLine] += std::pow(2, valueToTry-1);
+            usedValuesColumn[curCellCol] += std::pow(2, valueToTry-1);
+            usedValuesBlock[blockIndex] += std::pow(2, valueToTry-1); 
+            
+            // don't want to visit already visited nodes
+            while(!cellsToVisit.empty() && visited[cellsToVisit.top().second.first][cellsToVisit.top().second.second]) {
+                // printf("Removing from cellsToVisit: (%d, %d)\n", cellsToVisit.top().second.first, cellsToVisit.top().second.second);
+                cellsToVisit.pop(); // remove top element because it was already visited
+            }
+            
+            // go deeper in our decision tree (board states), visiting another tree -> DFS
+            isBoardCompleted = backtrackingSearch(visited);
+            // std::cout << "Returning from backing track from (" << curCellLine << ", " << curCellCol << ") was with value " << valueToTry  << std::endl;  
+            if(isBoardCompleted) // if we completed the board, the challenge is over, we can stop the search
+                return true;
+
+            // undo updates in usedValuesRow, usedValuesCol, usedValuesBlock
+            usedValuesRow[curCellLine] -= std::pow(2, valueToTry-1);
+            usedValuesColumn[curCellCol] -= std::pow(2, valueToTry-1);
+            usedValuesBlock[blockIndex] -= std::pow(2, valueToTry-1);
+            board[curCellLine][curCellCol] = 0;
+
+            // resets priority_queue
+            cellsToVisit = cellsToVisit_BACKUP2;
         }
 
-        // decide the value to assign to current cell
-        board[curCellLine][curCellCol] = valueToTry;
-
-        // update values for usedValuesRow, usedValuesCol, usedValuesBlock
-        usedValuesRow[curCellLine] += std::pow(2, valueToTry-1);
-        usedValuesColumn[curCellCol] += std::pow(2, valueToTry-1);
-        usedValuesBlock[blockIndex] += std::pow(2, valueToTry-1); 
-        
-        // go deeper in our decision tree (board states), visiting another tree -> DFS
-        isBoardCompleted = backtrackingSearch(visited);
-        std::cout << "Returning from backing track from (" << curCellLine << ", " << curCellCol << ") was with value " << valueToTry  << std::endl;  
-        if(isBoardCompleted) // if we completed the board, the challenge is over, we can stop the search
-            return true;
-
-        // undo updates in usedValuesRow, usedValuesCol, usedValuesBlock
-        usedValuesRow[curCellLine] -= std::pow(2, valueToTry-1);
-        usedValuesColumn[curCellCol] -= std::pow(2, valueToTry-1);
-        usedValuesBlock[blockIndex] -= std::pow(2, valueToTry-1);
-        board[curCellLine][curCellCol] = 0;
-
+        // resets available values for each cell
         nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
     }
 
@@ -307,7 +282,9 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
 }
 
 void SudokuSolver::printBoard(){
-    std::cout << "board size = " << board.size() << std::endl;
+    std::cout << "======== BOARD STATE ========\n";
+    std::cout << "-> Board size: " << board.size() << std::endl;
+    std::cout << "|-----------------------|\n";
     for (int i = 0; i < boardSize; i++) {
         for (int j = 0; j < boardSize; j++) {
             if(j%blockSize == 0) std::cout << "| ";
@@ -324,7 +301,7 @@ void SudokuSolver::initialAdding(){
         for(int j = 0;j<boardSize;j++){
             if(board[i][j] == 0){
                 availableQtty = getAvailableValuesForCell(i,j).size();
-                std::cout << "line = " << i << "; col = " << j << "; N.A.V. = " << availableQtty << std::endl;
+                // std::cout << "line = " << i << "; col = " << j << "; N.A.V. = " << availableQtty << std::endl;
                 cellsToVisit.push({boardSize - availableQtty,{i,j}});
             }
         }
@@ -341,10 +318,10 @@ void SudokuSolver::heuristicSearch() {
 
     sudokuSolved = backtrackingSearch(visited);
     if(sudokuSolved){
-        std::cout << "We've got an answer!\n";
+        std::cout << "Yey, we have a winner!\n";
     }
     else{
-        std::cout << "Not this time :(\n";
+        std::cout << "Oh no, the board seems unsolvable :(\n";
     }
     printBoard();
 
@@ -352,5 +329,9 @@ void SudokuSolver::heuristicSearch() {
 }
 
 void SudokuSolver::solve() {
+    const clock_t begin_time = std::clock();
+
     heuristicSearch();
+
+    std::cout << "TIME IN HEURISTIC SEARCH = " << float( std::clock() - begin_time ) / CLOCKS_PER_SEC << std::endl;
 }

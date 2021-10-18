@@ -8,6 +8,7 @@
 #include <queue>
 #include <numeric>
 #include <bitset>
+#include <ctime>
 
 class SudokuSolver {
     private:

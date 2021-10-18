@@ -24,11 +24,11 @@ std::vector<std::vector<int>> readFile(std::string filePath){
         splitString(lineText, ' ', splittedText);
         sudokuBoard.push_back(splittedText);
     }
-    for(std::vector<int> line : sudokuBoard){
-        for(int c: line) std::cout << c << " ";
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
+    // for(std::vector<int> line : sudokuBoard){
+    //     for(int c: line) std::cout << c << " ";
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
 
     return sudokuBoard;
 }
