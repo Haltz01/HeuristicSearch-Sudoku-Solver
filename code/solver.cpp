@@ -63,9 +63,6 @@ std::vector<int> SudokuSolver::getAvailableValuesForCell(int row, int col) {
     return availableValues;
 }
 
-
-
-
 bool SudokuSolver::checkIfValueRepeats(int row, int col,int checkValue) {
     int blockIndex = 0;
     blockIndex += blockSize * floor((row/blockSize));
@@ -110,6 +107,21 @@ bool SudokuSolver::checkIfValueRepeats(int row, int col,int checkValue) {
 //     return false;
 // }
 
+/** 
+  * void SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
+  * 
+  * Summary: 
+  *     Most important function to the heuristic search algorithm.
+  *     It implements the backtracking solution and all the
+  *     heuritics we develop. Here, the sudoku board is solved.
+  * 
+  * Parameters:
+  *     std::vector<std::vector<bool>> & visited -- 2D vector that tells if
+  *     the element (i,j) in visited[i][j] was visited (true) or not (false)
+  * 
+  * Return Value: 
+  *     Nothing (void)
+  */ 
 bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) {
     bool isBoardCompleted = true;
     bool toBreak = false;
@@ -268,19 +280,30 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
     }
 
     // starting "backtracking rewind"...
-
-    // if (!isBoardCompleted)... (if we reach here, the board won't be complete)
-    // ...undo propagation of value assignment to all other empty cells in same row, column and bloc
     
     // resets priority_queue
     cellsToVisit = cellsToVisit_BACKUP;
 
-    // backtracking after DFS
+    // invisits current cell because our try didn't work :(
     visited[curCellLine][curCellCol] = false;
 
     return false;
 }
 
+/** 
+  * void SudokuSolver::printBoard() 
+  * 
+  * Summary: 
+  *     Prints all elements in the board
+  *     Currently, it's configured to fit a 9x9 board,
+  *     but it works with boards with any size
+  * 
+  * Parameters:
+  *     None
+  * 
+  * Return Value: 
+  *     Nothing (void)
+  */ 
 void SudokuSolver::printBoard(){
     std::cout << "======== BOARD STATE ========\n";
     std::cout << "-> Board size: " << board.size() << std::endl;
@@ -295,6 +318,21 @@ void SudokuSolver::printBoard(){
     }
 }
 
+/** 
+  * void SudokuSolver::initialAdding() 
+  * 
+  * Summary: 
+  *     Does the inicial scan of available values for each cell.
+  *     It fills the "cellsToVisit" priority_queue, which
+  *     contains all elements that will be visited by
+  *     the search algorithm
+  * 
+  * Parameters:
+  *     None
+  * 
+  * Return Value: 
+  *     Nothing (void)
+  */ 
 void SudokuSolver::initialAdding(){
     int availableQtty;
     for(int i = 0;i<boardSize;i++){
@@ -308,7 +346,21 @@ void SudokuSolver::initialAdding(){
     }
 }
 
-
+/** 
+  * void SudokuSolver::heuristicSearch() 
+  * 
+  * Summary: 
+  *     Main function related to the heuristic search
+  *     It calls the initialValuesLookup() and initialAdding()
+  *     functions, then starts the search algorithm (a smart DFS)
+  *     and finally prints the final board
+  * 
+  * Parameters:
+  *     None
+  * 
+  * Return Value: 
+  *     Nothing (void)
+  */ 
 void SudokuSolver::heuristicSearch() {
     //std::vector<std::vector<bool>> visited(boardSize, std::vector<bool>(boardSize, false));
     visited = std::vector<std::vector<bool>>(boardSize, std::vector<bool>(boardSize, false));
@@ -328,6 +380,21 @@ void SudokuSolver::heuristicSearch() {
     return;
 }
 
+/** 
+  * void SudokuSolver::solve() 
+  * 
+  * Summary: 
+  *     Function that should be called outside the "solver" class.
+  *     It calls the heuristicSearch() function and also
+  *     prints the time used to do the search and finish
+  *     the sudoku board
+  * 
+  * Parameters:
+  *     None
+  * 
+  * Return Value: 
+  *     Nothing (void)
+  */ 
 void SudokuSolver::solve() {
     const clock_t begin_time = std::clock();
 
