@@ -5,8 +5,9 @@ This project was developed at the University of São Paulo (USP) - Campus São C
 ## Test cases
 Test cases are in `/test_cases`
 
-- `01.in` to `04.in` are easy to solve (blind search will solve it)
-- `05.in` to `15.in` are not that easy (needs heuristic search and some miliseconds/seconds, blind will take too much time)
+- `00_1.in` to `00_4_.in` are easy to solve (blind search will solve it)
+- `01.in` to `04.in` are not that easy (blind search will take a lot of time, heuristic search will use some miliseconds)
+- `05.in` to `15.in` are harder (needs heuristic search and some miliseconds/seconds, blind will take too much time)
 
 ## Results and benchmark
 // TODO

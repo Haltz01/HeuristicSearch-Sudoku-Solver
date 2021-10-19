@@ -63,7 +63,7 @@ std::vector<int> SudokuSolver::getAvailableValuesForCell(int row, int col) {
     return availableValues;
 }
 
-bool SudokuSolver::checkIfValueRepeats(int row, int col,int checkValue) {
+bool SudokuSolver::checkIfValueNotPossible(int row, int col,int checkValue) {
     int blockIndex = 0;
     blockIndex += blockSize * floor((row/blockSize));
     blockIndex += floor((col/blockSize));
@@ -192,7 +192,7 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
         nbOfValuesAvailableToCell_BACKUP = nbOfValuesAvailableToCell;
 
         for (int i = 0; i < boardSize; i++) {
-            if (curCellCol != i && board[curCellLine][i] == 0 && !checkIfValueRepeats(curCellLine,i,valueToTry)) { // LINE
+            if (curCellCol != i && board[curCellLine][i] == 0 && !checkIfValueNotPossible(curCellLine,i,valueToTry)) { // LINE
                 if(nbOfValuesAvailableToCell[curCellLine][i] == 1){
                     // std::cout << "$ Cell [" << curCellLine << "][" << i << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
@@ -204,7 +204,7 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
                     cellsToInsertInPq.insert(std::make_pair(curCellLine, i));
             }
 
-            if (curCellLine != i && board[i][curCellCol] == 0 && !checkIfValueRepeats(i,curCellCol,valueToTry)) { // COLUMN
+            if (curCellLine != i && board[i][curCellCol] == 0 && !checkIfValueNotPossible(i,curCellCol,valueToTry)) { // COLUMN
                 if(nbOfValuesAvailableToCell[i][curCellCol] == 1){
                     // std::cout << "$ Cell [" << i << "][" << curCellCol << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
@@ -220,7 +220,7 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
             colBlock = blockSize*(blockIndex%blockSize) + i%blockSize;
             if(lineBlock == curCellLine || colBlock == curCellCol)
                 continue;
-            if (board[lineBlock][colBlock] == 0 && !checkIfValueRepeats(lineBlock,colBlock,valueToTry)) { // BLOCK
+            if (board[lineBlock][colBlock] == 0 && !checkIfValueNotPossible(lineBlock,colBlock,valueToTry)) { // BLOCK
                 if(nbOfValuesAvailableToCell[lineBlock][colBlock] == 1){
                     // std::cout << "$ Cell [" << lineBlock << "][" << colBlock << "] can't have a value assigned to -> Returning..." << std::endl;
                     nbOfValuesAvailableToCell = nbOfValuesAvailableToCell_BACKUP;
@@ -284,7 +284,7 @@ bool SudokuSolver::backtrackingSearch(std::vector<std::vector<bool>> & visited) 
     // resets priority_queue
     cellsToVisit = cellsToVisit_BACKUP;
 
-    // invisits current cell because our try didn't work :(
+    // "unvisits" current cell because our try didn't work :(
     visited[curCellLine][curCellCol] = false;
 
     return false;

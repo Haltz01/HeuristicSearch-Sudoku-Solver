@@ -33,7 +33,7 @@ class SudokuSolver {
         void copyBoard(std::vector<std::vector<int>> & boardToCopy);
         void initialAdding();
         bool valueCausesDuplicates(int curCellLine,int curCellCol,int valueToTry);
-        bool checkIfValueRepeats(int row, int col,int checkValue);
+        bool checkIfValueNotPossible(int row, int col,int checkValue);
         void copyPriorityQueue(std::priority_queue<std::pair<int, std::pair<int, int>>> & priorityQueueBackup);
 
 };
